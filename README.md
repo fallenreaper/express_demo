@@ -13,6 +13,7 @@ The purpose of this demo is to create a sample Swagger API for some simple crud 
 - [x] Swagger API
 - [x] Simple SQLITE DB for storage
 - [ ] Tests
+- [x] Delay on POST order
 
 ## Setup
 

@@ -76,9 +76,12 @@ orderRouter.get("/orders/:id", (req, res) => {
  *       400:
  *         description: Error creating order
  */
-orderRouter.post("/orders/:id", (req, res) => {
+orderRouter.post("/orders/:id", async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
+  await new Promise((res) => {
+    setTimeout(res, 3000);
+  });
   try {
     // Can error
     db.prepare("INSERT INTO orders (id, name) VALUES (?, ?)").run(id, name);
