@@ -4,11 +4,22 @@ The purpose of this demo is to create a sample Swagger API for some simple crud 
 
 ## Tasks to Complete
 
-- [ ] POST /orders/
+- [x] Documentation of Events
+- [x] POST /orders/
 - [x] GET /orders/
-- [ ] GET /orders/:id
-- [ ] PATCH /orders/:id
-- [ ] DELETE /orders/:id
+- [x] GET /orders/:id
+- [x] PATCH /orders/:id
+- [x] DELETE /orders/:id
 - [x] Swagger API
-- [ ] Simple SQLITE DB for storage
+- [x] Simple SQLITE DB for storage
 - [ ] Tests
+
+## Setup
+
+The setup for this application is very basic for node applications.
+
+```bash
+npm ci
+npm run build
+npm run start
+```

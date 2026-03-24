@@ -2,9 +2,13 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger.config.js";
 import orderRouter from "./routes/orders.routes.js";
+import { initializeDatabase } from "./db.js";
 
 const app = express();
 app.use(express.json());
+
+// Initialize database
+initializeDatabase();
 
 // Serve Swagger UI at /api-docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
