@@ -20,7 +20,7 @@ type Order = {
  *         description: A JSON array of order objects.
  */
 orderRouter.get("/orders", (req, res) => {
-  const orders = db.prepare("SELECT * FROM orders").all();
+  const orders = db.prepare("SELECT * FROM orders").all() as Order[];
   res.json(orders);
 });
 
@@ -43,7 +43,9 @@ orderRouter.get("/orders", (req, res) => {
  */
 orderRouter.get("/orders/:id", (req, res) => {
   const { id } = req.params;
-  const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id);
+  const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
+    | Order
+    | undefined;
   if (!order) {
     res.status(404).json({ message: "Order not found" });
   }
@@ -85,7 +87,9 @@ orderRouter.post("/orders/:id", async (req, res) => {
   try {
     // Can error
     db.prepare("INSERT INTO orders (id, name) VALUES (?, ?)").run(id, name);
-    const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id);
+    const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
+      | Order
+      | undefined;
     res.status(201).json(order);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -125,7 +129,9 @@ orderRouter.patch("/orders/:id", (req, res) => {
     db.prepare(
       "UPDATE orders SET name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
     ).run(name, id);
-    const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id);
+    const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
+      | Order
+      | undefined;
     res.json(order);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -150,7 +156,9 @@ orderRouter.patch("/orders/:id", (req, res) => {
  */
 orderRouter.delete("/orders/:id", (req, res) => {
   const { id } = req.params;
-  const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id);
+  const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
+    | Order
+    | undefined;
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
   }

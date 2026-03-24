@@ -14,6 +14,7 @@ The purpose of this demo is to create a sample Swagger API for some simple crud 
 - [x] Simple SQLITE DB for storage
 - [ ] Tests
 - [x] Delay on POST order
+- [x] Added a POSTMAN [Collection](./POSTMAN-collection.json)
 
 ## Setup
 
@@ -21,6 +22,5 @@ The setup for this application is very basic for node applications.
 
 ```bash
 npm ci
-npm run build
 npm run start
 ```
