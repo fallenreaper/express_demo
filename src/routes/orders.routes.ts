@@ -1,13 +1,27 @@
 import { Router } from "express";
 import db from "../db.js";
+import { z } from "zod";
 
 const orderRouter = Router();
 
 type Order = {
   id: string;
   name: string;
+  status: "Pending" | "Shipped";
   created_at?: string;
   updated_at?: string;
+};
+
+const OrderSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  status: z.enum(["Pending", "Shipped"]).optional(),
+  created_at: z.iso.datetime().optional(),
+  updated_at: z.iso.datetime().optional(),
+});
+
+const validateOrder = (obj: Order) => {
+  return OrderSchema.safeParse(obj);
 };
 
 /**
@@ -72,6 +86,10 @@ orderRouter.get("/orders/:id", (req, res) => {
  *             properties:
  *               name:
  *                 type: string
+ *                 required: true
+ *               status:
+ *                 type: string
+ *                 required: false
  *     responses:
  *       201:
  *         description: Order created successfully
@@ -80,13 +98,26 @@ orderRouter.get("/orders/:id", (req, res) => {
  */
 orderRouter.post("/orders/:id", async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const _validate = validateOrder({ id, ...req.body });
+  if (!_validate.success) {
+    res.status(400).json({ error: _validate.error.issues[0].message });
+    return;
+  }
+  let { name, status } = req.body as Order;
+  if (!status) {
+    status = "Pending";
+  }
   await new Promise((res) => {
     setTimeout(res, 3000);
   });
+
   try {
     // Can error
-    db.prepare("INSERT INTO orders (id, name) VALUES (?, ?)").run(id, name);
+    db.prepare("INSERT INTO orders (id, name, status) VALUES (?, ?, ?)").run(
+      id,
+      name,
+      status,
+    );
     const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
       | Order
       | undefined;
@@ -115,6 +146,10 @@ orderRouter.post("/orders/:id", async (req, res) => {
  *             properties:
  *               name:
  *                 type: string
+ *                 required: false
+ *               status:
+ *                 type: string
+ *                 required: false
  *     responses:
  *       200:
  *         description: Order updated successfully
@@ -123,12 +158,17 @@ orderRouter.post("/orders/:id", async (req, res) => {
  */
 orderRouter.patch("/orders/:id", (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const _validate = validateOrder(req.body);
+  if (!_validate.success) {
+    res.status(400).json({ error: _validate.error.issues[0].message });
+    return;
+  }
+  const { name, status } = req.body;
   try {
     // Can Error
     db.prepare(
-      "UPDATE orders SET name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-    ).run(name, id);
+      "UPDATE orders SET name = ?, updated_at = CURRENT_TIMESTAMP, status = ? WHERE id = ?",
+    ).run(name, status, id);
     const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
       | Order
       | undefined;
