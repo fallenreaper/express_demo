@@ -43,6 +43,15 @@ To test against POST, you will see the following:
 - Delete an order, will delete an order if it exists.
 - Get Id that doesnt exist: This was a sample to show error handling.
 
+### Images of Responses
+
+![Getting All Orders](./images/Screenshot%202026-03-24%20at%2022.13.47.png)
+![Getting Order By Id](./images/Screenshot%202026-03-24%20at%2022.14.05.png)
+![Adding a new Order](./images/Screenshot%202026-03-24%20at%2022.14.29.png)
+![mutate an order](./images/Screenshot%202026-03-24%20at%2022.14.50.png)
+![Delete](./images/Screenshot%202026-03-24%20at%2022.15.01.png)
+![Trying to Delete it a Second time](./images/Screenshot%202026-03-24%20at%2022.15.12.png)
+
 ## Notes
 
 There was not specific schema we were to adhere to, so I just created a simple project with a few properties.
