@@ -31,9 +31,9 @@ npm run start
 
 For some samples, import the [POSTMAN](./POSTMAN-collection.json) file into your application.
 
-As long as the app is running, it is going to be available to query against with POSTMAN. By default, when you first run the application, it will create a new SQLITE database for you. If you want to see the api, you can go to [API DOCS](http://localhost:3000/api-docs) to see the Swagger API.
+As long as the app is running, it is going to be available to query against with POSTMAN. By default, when you first run the application, it will create a new SQLITE database for you. If you want to see the api, you can go to [API DOCS](http://localhost:3000/api-docs) to see the Swagger API. Note, to see the _API DOCS_ above, the app needs to be running.
 
-To test against POST, you will see the following:
+To test against POSTMAN, you will see the following:
 
 - Get All Orders: Will get all orders
 - Get Order by Id: Will get a specific order if it exists
