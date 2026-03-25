@@ -12,7 +12,7 @@ The purpose of this demo is to create a sample Swagger API for some simple crud 
 - [x] DELETE /orders/:id
 - [x] Swagger API
 - [x] Simple SQLITE DB for storage
-- [ ] Tests using Jest
+- [ ] [OPTIONAL] Tests using Jest
 - [x] Delay on POST order
 - [x] Added a POSTMAN [Collection](./POSTMAN-collection.json)
 - [x] Update Order Definition to have a state string.
@@ -26,3 +26,25 @@ The setup for this application is very basic for node applications.
 npm ci
 npm run start
 ```
+
+## Postman
+
+For some samples, import the [POSTMAN](./POSTMAN-collection.json) file into your application.
+
+As long as the app is running, it is going to be available to query against with POSTMAN. By default, when you first run the application, it will create a new SQLITE database for you. If you want to see the api, you can go to [API DOCS](http://localhost:3000/api-docs) to see the Swagger API.
+
+To test against POST, you will see the following:
+
+- Get All Orders: Will get all orders
+- Get Order by Id: Will get a specific order if it exists
+- Post data: Will create a new Order. The only required property is name.
+  - You are welcome to do a few Posts, so you can see all the orders in the list ( in the above get all orders ).
+- Update Order will let you update the name or status based on the body passed into the call.
+- Delete an order, will delete an order if it exists.
+- Get Id that doesnt exist: This was a sample to show error handling.
+
+## Notes
+
+There was not specific schema we were to adhere to, so I just created a simple project with a few properties.
+
+I incorporated `zod` as a means to do schema validation for POST/PATCH events. In other tools, you can also directly incorporate it into the database queries as well, but I wanted to not add too many additional packages.
