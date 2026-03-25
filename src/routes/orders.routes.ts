@@ -158,18 +158,22 @@ orderRouter.post("/orders/:id", async (req, res) => {
  */
 orderRouter.patch("/orders/:id", (req, res) => {
   const { id } = req.params;
-  const _validate = validateOrder(req.body);
+  const _validate = validateOrder({ id, ...req.body });
   if (!_validate.success) {
     res.status(400).json({ error: _validate.error.issues[0].message });
     return;
   }
-  const { name, status } = req.body;
+  let { name, status } = req.body;
   try {
-    // Can Error
+    let order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
+      | Order
+      | undefined;
+    if (!name) name = order?.name;
+    if (!status) status = order?.status;
     db.prepare(
       "UPDATE orders SET name = ?, updated_at = CURRENT_TIMESTAMP, status = ? WHERE id = ?",
     ).run(name, status, id);
-    const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
+    order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
       | Order
       | undefined;
     res.json(order);
