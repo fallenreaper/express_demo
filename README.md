@@ -52,6 +52,27 @@ To test against POSTMAN, you will see the following:
 ![Delete](./images/Screenshot%202026-03-24%20at%2022.15.01.png)
 ![Trying to Delete it a Second time](./images/Screenshot%202026-03-24%20at%2022.15.12.png)
 
+## Docker and K8s
+
+Building your Docker image requires that your docker daemon is running.
+
+### Docker
+
+```bash
+docker build -t mod10 .
+docker run -d -p 3000:3000 mod10
+```
+
+If you want to push it to the docker hub, make sure you log in, create a repo and then create a build with the correct tag.
+
+```bash
+docker login
+docker build -t foo/csc820-mod10
+docker push foo/csc820-mod10
+```
+
+### K8S
+
 ## Notes
 
 There was not specific schema we were to adhere to, so I just created a simple project with a few properties.

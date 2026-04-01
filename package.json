@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "The purpose of this demo is to create a sample Swagger API for some simple crud operations.",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "build": "tsc",
     "start": "tsc && node dist/index.js",
