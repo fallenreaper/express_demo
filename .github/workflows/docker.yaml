@@ -15,6 +15,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Use Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          # Optional: cache dependencies for faster runs
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
 
