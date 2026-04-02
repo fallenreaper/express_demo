@@ -14,7 +14,15 @@ type Order = {
 
 const OrderSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string().min(1),
+  status: z.enum(["Pending", "Shipped"]).optional(),
+  created_at: z.iso.datetime().optional(),
+  updated_at: z.iso.datetime().optional(),
+});
+
+const PatchOrderSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1).optional(),
   status: z.enum(["Pending", "Shipped"]).optional(),
   created_at: z.iso.datetime().optional(),
   updated_at: z.iso.datetime().optional(),
@@ -22,6 +30,10 @@ const OrderSchema = z.object({
 
 const validateOrder = (obj: Order) => {
   return OrderSchema.safeParse(obj);
+};
+
+const validatePatchOrder = (obj: Partial<Order> & { id: string }) => {
+  return PatchOrderSchema.safeParse(obj);
 };
 
 /**
@@ -107,9 +119,6 @@ orderRouter.post("/orders/:id", async (req, res) => {
   if (!status) {
     status = "Pending";
   }
-  await new Promise((res) => {
-    setTimeout(res, 3000);
-  });
 
   try {
     // Can error
@@ -158,7 +167,7 @@ orderRouter.post("/orders/:id", async (req, res) => {
  */
 orderRouter.patch("/orders/:id", (req, res) => {
   const { id } = req.params;
-  const _validate = validateOrder({ id, ...req.body });
+  const _validate = validatePatchOrder({ id, ...req.body });
   if (!_validate.success) {
     res.status(400).json({ error: _validate.error.issues[0].message });
     return;
@@ -168,8 +177,11 @@ orderRouter.patch("/orders/:id", (req, res) => {
     let order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
       | Order
       | undefined;
-    if (!name) name = order?.name;
-    if (!status) status = order?.status;
+    if (!order) {
+      return res.status(400).json({ error: "Order not found" });
+    }
+    if (!name) name = order.name;
+    if (!status) status = order.status;
     db.prepare(
       "UPDATE orders SET name = ?, updated_at = CURRENT_TIMESTAMP, status = ? WHERE id = ?",
     ).run(name, status, id);

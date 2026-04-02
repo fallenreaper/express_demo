@@ -12,7 +12,7 @@ The purpose of this demo is to create a sample Swagger API for some simple crud 
 - [x] DELETE /orders/:id
 - [x] Swagger API
 - [x] Simple SQLITE DB for storage
-- [ ] [OPTIONAL] Tests using Jest
+- [x] [OPTIONAL] Tests using Jest
 - [x] Delay on POST order
 - [x] Added a POSTMAN [Collection](./POSTMAN-collection.json)
 - [x] Update Order Definition to have a state string.
