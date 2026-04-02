@@ -89,6 +89,29 @@ After the Cluster is set up, there is a connection string you can use when it sa
 
 After the nodes are all stood up and the service sets up for an external IP, you can then access it on the internet. Note, it is also not necessarily immediate and can be 1-10 minutes to get updated with the IP being allowed.
 
+## Github Actions
+
+### Service Account
+
+First I need to create a service account to access K8s
+
+```bash
+
+# Sample Project Id: graphic-charter-118902
+
+# Which Project it is being assigned to. Use its IDENTIFIER
+gcloud config set project PROJECT
+# Creates the account.
+gcloud iam service-accounts create "github-actions-gke" \
+    --display-name "GitHub Actions GKE Deployer"
+gcloud projects add-iam-policy-binding graphic-charter-118902 \
+    --member="serviceAccount:github-actions-gke@graphic-charter-118902.iam.gserviceaccount.com" \
+    --role="roles/container.developer"
+gcloud iam service-accounts keys create ~/key.json \
+    --iam-account=github-actions-gke@graphic-charter-118902.iam.gserviceaccount.com
+
+```
+
 ## Notes
 
 There was not specific schema we were to adhere to, so I just created a simple project with a few properties.
