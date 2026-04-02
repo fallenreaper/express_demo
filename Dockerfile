@@ -1,17 +1,12 @@
-FROM node:24.0.0 as builder
+FROM node:24.0.0
 
 WORKDIR /app
-COPY . .
+COPY package*.json ./
 RUN npm ci
+COPY src ./src
+COPY tsconfig.json ./
+RUN chown -R node:node .
+USER node
 RUN npm run build
-
-FROM node:24.0.0 as final
-WORKDIR /app
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist .
-
-# RUN chown -R node:node .
-# USER node
-
 EXPOSE 3000
-CMD [ "node", "index.js" ]
+CMD ["npm", "start"]
