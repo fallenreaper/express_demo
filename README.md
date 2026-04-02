@@ -2,6 +2,10 @@
 
 The purpose of this demo is to create a sample Swagger API for some simple crud operations.
 
+## Cluster Offline
+
+For demo purposes, this is using a service account for a cluster I have since offlined. Due to that, the deployment action part of the github action is currently going to fail at the gcloud.
+
 ## Tasks to Complete
 
 - [x] Documentation of Events
