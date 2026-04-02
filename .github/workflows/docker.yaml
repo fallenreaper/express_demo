@@ -48,9 +48,10 @@ jobs:
       - name: "Use gcloud CLI"
         run: |
           echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > gcp-service-account.json
+          gcloud components install gke-gcloud-auth-plugin
+          gcloud components install kubectl
           gcloud auth activate-service-account --key-file gcp-service-account.json
           gcloud container clusters get-credentials autopilot-cluster-1 --zone us-east1 --project graphic-charter-118902
-          gcloud components install kubectl
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
         env:
