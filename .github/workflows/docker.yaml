@@ -34,12 +34,6 @@ jobs:
           tags: ${{ env.DOCKER_IMAGE }}:latest
           platforms: linux/amd64,linux/arm64
 
-      # - id: "auth"
-      #   name: "Authenticate to Google Cloud"
-      #   uses: "google-github-actions/auth@v3"
-      #   with:
-      #     credentials_json: "${{ $GCP_SERVICE_ACCOUNT_KEY | base64 -d }}"
-
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v2"
         with:
