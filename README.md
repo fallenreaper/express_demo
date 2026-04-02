@@ -111,7 +111,7 @@ gcloud iam service-accounts keys create ~/key.json \
     --iam-account=github-actions-gke@graphic-charter-118902.iam.gserviceaccount.com
 ```
 
-This is used as a means to properly set up the information you need in order to stand up the correct service account.
+This is used as a means to properly set up the information you need in order to stand up the correct service account. This is a good enabler.
 
 ## Notes
 
