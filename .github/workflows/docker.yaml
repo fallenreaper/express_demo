@@ -52,3 +52,5 @@ jobs:
           gcloud container clusters get-credentials <your-cluster-name> --zone <your-cluster-zone>
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
+        env:
+          GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
