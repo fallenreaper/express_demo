@@ -31,15 +31,15 @@ spec:
         - name: my-app-volume
           persistentVolumeClaim:
             claimName: my-app-pvc
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: my-app-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Ti
-  storageClassName: standard-rwx
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: my-app-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   resources:
+#     requests:
+#       storage: 1Ti
+#   storageClassName: standard-rwx

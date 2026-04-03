@@ -1,6 +1,7 @@
 import Database from "better-sqlite3";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -9,6 +10,10 @@ console.log("Database path:", process.env.DATABASE_PATH);
 const dbDirectory = process.env.DATABASE_PATH || path.join(__dirname, "../db");
 const dbPath = path.join(dbDirectory, "orders.db");
 console.log("Full database path:", dbPath);
+
+// Create the directory if it doesn't exist
+fs.mkdirSync(dbDirectory, { recursive: true });
+
 const db = new Database(dbPath);
 db.pragma("journal_mode = WAL");
 
