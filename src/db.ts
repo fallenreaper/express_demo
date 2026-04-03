@@ -3,7 +3,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dbPath = path.join(__dirname, "../orders.db");
+
+// Use DATABASE_PATH environment variable for the database directory, default to ../db if not set
+const dbDirectory = process.env.DATABASE_PATH || path.join(__dirname, "../db");
+const dbPath = path.join(dbDirectory, "orders.db");
 
 const db = new Database(dbPath);
 db.pragma("journal_mode = WAL");

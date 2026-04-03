@@ -12,25 +12,21 @@ spec:
       labels:
         app: my-app
     spec:
-      nodeSelector:
-        cloud.google.com/compute-class: Performance
-        kubernetes.io/arch: arm64
+      # nodeSelector:
+      # cloud.google.com/compute-class: Performance
+      # kubernetes.io/arch: arm64
       containers:
         - name: my-app
           image: fallenreaper/csc820-mod10:latest
           imagePullPolicy: Always
           volumeMounts:
             - name: my-app-volume
-              mountPath: /app/orders.db
-              subPath: orders.db
-            - name: my-app-volume
-              mountPath: /app/orders.db-shm
-              subPath: orders.db-shm
-            - name: my-app-volume
-              mountPath: /app/orders.db-wal
-              subPath: orders.db-wal
+              mountPath: /app/db
           ports:
             - containerPort: 3000
+          env:
+            - name: DATABASE_PATH # Tell your app to look in the new folder
+              value: "/app/data/orders.db"
       volumes:
         - name: my-app-volume
           persistentVolumeClaim:
@@ -42,8 +38,8 @@ metadata:
   name: my-app-pvc
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
-  storageClassName: nfs-client
+      storage: 200Gi
+  storageClassName: standard-rwx
