@@ -111,11 +111,13 @@ gcloud iam service-accounts create "github-actions-gke" \
 gcloud projects add-iam-policy-binding graphic-charter-118902 \
     --member="serviceAccount:github-actions-gke@graphic-charter-118902.iam.gserviceaccount.com" \
     --role="roles/container.developer"
-gcloud iam service-accounts keys create ~/key.json \
+gcloud iam service-accounts keys create ./key.json \
     --iam-account=github-actions-gke@graphic-charter-118902.iam.gserviceaccount.com
 ```
 
 This is used as a means to properly set up the information you need in order to stand up the correct service account. This is a good enabler.
+
+For consistancey, I set up the Token in Sercrets to be set as a B64 encoded string so I mask it a bit more.
 
 ## Notes
 
