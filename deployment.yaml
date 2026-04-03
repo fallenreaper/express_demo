@@ -26,7 +26,7 @@ spec:
             - containerPort: 3000
           env:
             - name: DATABASE_PATH
-              value: "/app/db/orders.db"
+              value: "/app/db"
       volumes:
         - name: my-app-volume
           persistentVolumeClaim:
@@ -38,8 +38,8 @@ metadata:
   name: my-app-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 200Gi
+      storage: 1Ti
   storageClassName: standard-rwx
