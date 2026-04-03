@@ -10,9 +10,6 @@ console.info("Database path:", process.env.DATABASE_PATH);
 const dbDirectory = process.env.DATABASE_PATH || path.join(__dirname, "../db");
 const dbPath = path.join(dbDirectory, "orders.db");
 console.info("Full database path:", dbPath);
-console.warn(
-  `DATABASE_PATH is set to: ${process.env.DATABASE_PATH}, using ${dbDirectory} as the database directory.`,
-);
 // Create the directory if it doesn't exist
 fs.mkdirSync(dbDirectory, { recursive: true });
 
