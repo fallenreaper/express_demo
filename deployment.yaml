@@ -36,6 +36,7 @@ spec:
           persistentVolumeClaim:
             claimName: my-app-pvc
 ---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: my-app-pvc
