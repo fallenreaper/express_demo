@@ -19,5 +19,30 @@ spec:
         - name: my-app
           image: fallenreaper/csc820-mod10:latest
           imagePullPolicy: Always
+          volumeMounts:
+            - name: my-app-volume
+              mountPath: /app/orders.db
+              subPath: orders.db
+            - name: my-app-volume
+              mountPath: /app/orders.db-shm
+              subPath: orders.db-shm
+            - name: my-app-volume
+              mountPath: /app/orders.db-wal
+              subPath: orders.db-wal
           ports:
             - containerPort: 3000
+      volumes:
+        - name: my-app-volume
+          persistentVolumeClaim:
+            claimName: my-app-pvc
+---
+kind: PersistentVolumeClaim
+metadata:
+  name: my-app-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: nfs-client
