@@ -25,8 +25,8 @@ spec:
           ports:
             - containerPort: 3000
           env:
-            - name: DATABASE_PATH # Tell your app to look in the new folder
-              value: "/app/data/orders.db"
+            - name: DATABASE_PATH
+              value: "/app/db/orders.db"
       volumes:
         - name: my-app-volume
           persistentVolumeClaim:
