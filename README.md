@@ -101,18 +101,20 @@ First I need to create a service account to access K8s
 
 ```bash
 
-# Sample Project Id: graphic-charter-118902
+# Sample Project Id: foo-bar-000001
+# Sample Service Account: meow
 
 # Which Project it is being assigned to. Use its IDENTIFIER
-gcloud config set project PROJECT
+gcloud config set project [PROJECT_ID]
 # Creates the account.
-gcloud iam service-accounts create "github-actions-gke" \
+gcloud iam service-accounts create "[SERVICE_ACCOUNT]" \
     --display-name "GitHub Actions GKE Deployer"
-gcloud projects add-iam-policy-binding graphic-charter-118902 \
-    --member="serviceAccount:github-actions-gke@graphic-charter-118902.iam.gserviceaccount.com" \
+gcloud projects add-iam-policy-binding [PROJECT_ID] \
+    --member="serviceAccount:[SERVICE_ACCOUNT]@[PROJECT_ID].iam.gserviceaccount.com" \
     --role="roles/container.developer"
 gcloud iam service-accounts keys create ./key.json \
-    --iam-account=github-actions-gke@graphic-charter-118902.iam.gserviceaccount.com
+    --iam-account=[SERVICE_ACCOUNT]@[PROJECT_ID].iam.gserviceaccount.com
+
 ```
 
 This is used as a means to properly set up the information you need in order to stand up the correct service account. This is a good enabler.

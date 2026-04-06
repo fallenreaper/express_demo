@@ -12,9 +12,6 @@ spec:
       labels:
         app: my-app
     spec:
-      # nodeSelector:
-      # cloud.google.com/compute-class: Performance
-      # kubernetes.io/arch: arm64
       securityContext:
         fsGroup: 2000
       containers:
