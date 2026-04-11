@@ -231,3 +231,223 @@ describe("Orders API", () => {
     });
   });
 });
+
+describe("MODULE 11 Tests", () => {
+  describe("CREATION", () => {
+    it("create_emptyObject should return 400", async () => {
+      const response = await request(app)
+        .post("/api/orders/666")
+        .send({})
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).not.toEqual("");
+    });
+
+    it("create_nonObjectPayload should return 400", async () => {
+      const response = await request(app)
+        .post("/api/orders/666")
+        .set("Content-Type", "application/json")
+        .send('""');
+
+      expect([400, 415]).toContain(response.status);
+      expect(response.body).toBeDefined();
+    });
+
+    it("create_partialObject_idOnly should return 400", async () => {
+      const response = await request(app)
+        .post("/api/orders/fooo")
+        .send({ id: "fooo" })
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("create_partialObject_nameOnly should create order with default status", async () => {
+      const response = await request(app)
+        .post("/api/orders/666")
+        .send({ name: "foo" })
+        .expect(201);
+
+      expect(response.body).toHaveProperty("id", "666");
+      expect(response.body).toHaveProperty("name", "foo");
+      expect(response.body).toHaveProperty("status", "Pending");
+    });
+
+    it("create_partialObject_invalidState should return 400", async () => {
+      const response = await request(app)
+        .post("/api/orders/666")
+        .send({ name: "Sample Name", status: "notreal" })
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("create_partialObject_validState should create order when state is provided", async () => {
+      const response = await request(app)
+        .post("/api/orders/666")
+        .send({ name: "Sample Name", state: "Pending" })
+        .expect(201);
+
+      expect(response.body).toHaveProperty("id", "666");
+      expect(response.body).toHaveProperty("name", "Sample Name");
+    });
+
+    it("create_fullObject should create order using path id", async () => {
+      const response = await request(app)
+        .post("/api/orders/666")
+        .send({ id: "foo", name: "sample", status: "Pending" })
+        .expect(201);
+
+      expect(response.body).toHaveProperty("id", "666");
+      expect(response.body).toHaveProperty("name", "sample");
+      expect(response.body).toHaveProperty("status", "Pending");
+    });
+
+    it("create_fullObject_idExistsAlready should return 400 for duplicate path id", async () => {
+      // Pre-create the id to match the expected API behavior
+      await request(app)
+        .post("/api/orders/666")
+        .send({ name: "sample", status: "Pending" })
+        .expect(201);
+
+      const response = await request(app)
+        .post("/api/orders/666")
+        .send({ id: "foo", name: "sample", status: "Pending" })
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+    });
+  });
+
+  describe("GETTERS", () => {
+    it("get_allOrders_noPayload should return 200 and array", async () => {
+      const response = await request(app).get("/api/orders").expect(200);
+
+      expect(Array.isArray(response.body)).toBe(true);
+    });
+
+    it("get_allOrders_payload should return 200 with empty body", async () => {
+      const response = await request(app)
+        .get("/api/orders")
+        .send({})
+        .expect(200);
+
+      expect(Array.isArray(response.body)).toBe(true);
+    });
+
+    it("get_singleOrder_noId should treat trailing slash as normal get", async () => {
+      const response = await request(app).get("/api/orders/").expect(200);
+
+      expect(Array.isArray(response.body)).toBe(true);
+    });
+
+    it("get_singleOrder_invalidId should return 404", async () => {
+      const response = await request(app)
+        .get("/api/orders/777")
+        .expect(404);
+
+      expect(response.body).toHaveProperty("message");
+    });
+
+    it("get_singleOrder_validId should return the seeded order", async () => {
+      await request(app)
+        .post("/api/orders/666")
+        .send({ name: "sample", status: "Pending" })
+        .expect(201);
+
+      const response = await request(app).get("/api/orders/666").expect(200);
+
+      expect(response.body).toHaveProperty("id", "666");
+      expect(response.body).toHaveProperty("status", "Pending");
+    });
+  });
+
+  describe("MUTATIONS", () => {
+    beforeEach(async () => {
+      await request(app)
+        .post("/api/orders/666")
+        .send({ name: "sample", status: "Pending" })
+        .expect(201);
+    });
+
+    it("mutate_invalidId should return 400", async () => {
+      const response = await request(app)
+        .patch("/api/orders/doesntexist")
+        .send({ id: "doesntexist", name: "changed" })
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("mutate_validId should accept empty body", async () => {
+      const response = await request(app)
+        .patch("/api/orders/666")
+        .send({})
+        .expect(200);
+
+      expect(response.body).toHaveProperty("id", "666");
+    });
+
+    it("mutate_validId_invalidProps_Name should return 400", async () => {
+      const response = await request(app)
+        .patch("/api/orders/666")
+        .send({ name: 6 })
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("mutate_validId_invalidProps_State should return 400", async () => {
+      const response = await request(app)
+        .patch("/api/orders/666")
+        .send({ status: "Not Valid Status" })
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("mutate_validId_validProps should update the order", async () => {
+      const response = await request(app)
+        .patch("/api/orders/666")
+        .send({ name: "New Name", status: "Shipped" })
+        .expect(200);
+
+      expect(response.body).toHaveProperty("id", "666");
+      expect(response.body).toHaveProperty("name", "New Name");
+      expect(response.body).toHaveProperty("status", "Shipped");
+    });
+  });
+
+  describe("DELETE", () => {
+    it("delete_invalidId should return 404", async () => {
+      const response = await request(app)
+        .delete("/api/orders/777")
+        .expect(404);
+
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("delete_invalidId_withBody should return 404", async () => {
+      const response = await request(app)
+        .delete("/api/orders/777")
+        .send({})
+        .expect(404);
+
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("delete_validId should delete the seeded order", async () => {
+      await request(app)
+        .post("/api/orders/666")
+        .send({ name: "sample", status: "Pending" })
+        .expect(201);
+
+      const response = await request(app)
+        .delete("/api/orders/666")
+        .expect(200);
+
+      expect(response.body).toHaveProperty("id", "666");
+    });
+  });
+});
