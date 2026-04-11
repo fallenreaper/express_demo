@@ -343,9 +343,7 @@ describe("MODULE 11 Tests", () => {
     });
 
     it("get_singleOrder_invalidId should return 404", async () => {
-      const response = await request(app)
-        .get("/api/orders/777")
-        .expect(404);
+      const response = await request(app).get("/api/orders/777").expect(404);
 
       expect(response.body).toHaveProperty("message");
     });
@@ -421,9 +419,7 @@ describe("MODULE 11 Tests", () => {
 
   describe("DELETE", () => {
     it("delete_invalidId should return 404", async () => {
-      const response = await request(app)
-        .delete("/api/orders/777")
-        .expect(404);
+      const response = await request(app).delete("/api/orders/777").expect(404);
 
       expect(response.body).toHaveProperty("error");
     });
@@ -443,9 +439,7 @@ describe("MODULE 11 Tests", () => {
         .send({ name: "sample", status: "Pending" })
         .expect(201);
 
-      const response = await request(app)
-        .delete("/api/orders/666")
-        .expect(200);
+      const response = await request(app).delete("/api/orders/666").expect(200);
 
       expect(response.body).toHaveProperty("id", "666");
     });
