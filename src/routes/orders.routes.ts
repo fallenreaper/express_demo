@@ -112,7 +112,10 @@ orderRouter.post("/orders/:id", async (req, res) => {
   const { id } = req.params;
   const _validate = validateOrder({ id, ...req.body });
   if (!_validate.success) {
-    res.status(400).json({ error: _validate.error.issues[0].message });
+    const msg =
+      `(${_validate.error.issues[0].path.join(" ")}): ` +
+      _validate.error.issues[0].message;
+    res.status(400).json({ error: msg });
     return;
   }
   let { name, status } = req.body as Order;
@@ -169,7 +172,10 @@ orderRouter.patch("/orders/:id", (req, res) => {
   const { id } = req.params;
   const _validate = validatePatchOrder({ id, ...req.body });
   if (!_validate.success) {
-    res.status(400).json({ error: _validate.error.issues[0].message });
+    const msg =
+      `(${_validate.error.issues[0].path.join(" ")}): ` +
+      _validate.error.issues[0].message;
+    res.status(400).json({ error: msg });
     return;
   }
   let { name, status } = req.body;
