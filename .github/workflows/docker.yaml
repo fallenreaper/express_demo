@@ -64,6 +64,13 @@ jobs:
           gcloud components install gke-gcloud-auth-plugin
           gcloud components install kubectl
           gcloud auth activate-service-account --key-file gcp-service-account.json
+
+          CLUSTER_STATUS=$(gcloud container clusters describe autopilot-cluster-1 --zone us-east1 --project graphic-charter-118902 --format='value(status)' 2>/dev/null || true)
+          if [[ "$CLUSTER_STATUS" != "RUNNING" ]]; then
+            echo "Cluster is not running (status: ${CLUSTER_STATUS:-UNKNOWN}). Skipping deploy."
+            exit 0
+          fi
+
           gcloud container clusters get-credentials autopilot-cluster-1 --zone us-east1 --project graphic-charter-118902
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
