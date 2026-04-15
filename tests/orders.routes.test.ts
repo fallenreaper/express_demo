@@ -146,10 +146,7 @@ describe("Orders API", () => {
           .send({ name: "Name", status: "Pending" })
           .expect(400);
 
-        expect(response.body).toHaveProperty(
-          "error",
-          "Error creating order",
-        );
+        expect(response.body).toHaveProperty("error", "Error creating order");
       } finally {
         createSpy.mockRestore();
       }
@@ -258,10 +255,7 @@ describe("Orders API", () => {
           .send({ name: "Name" })
           .expect(400);
 
-        expect(response.body).toHaveProperty(
-          "error",
-          "Error updating order",
-        );
+        expect(response.body).toHaveProperty("error", "Error updating order");
       } finally {
         updateSpy.mockRestore();
       }
