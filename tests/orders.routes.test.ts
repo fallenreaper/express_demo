@@ -19,6 +19,7 @@ testDb.exec(`
 // Mock the db import before importing the router
 jest.mock("../src/db.js", () => ({ __esModule: true, default: testDb }));
 
+import * as orderService from "../src/order";
 import orderRouter from "../src/routes/orders.routes";
 
 // Create a test app
@@ -117,6 +118,43 @@ describe("Orders API", () => {
       expect(response.body).toHaveProperty("status", "Pending");
     });
 
+    it("should return 400 when createOrder fails", async () => {
+      const createSpy = jest
+        .spyOn(orderService, "createOrder")
+        .mockReturnValue([undefined, new Error("Route create failed")]);
+
+      try {
+        const response = await request(app)
+          .post("/api/orders/order500")
+          .send({ name: "Name", status: "Pending" })
+          .expect(400);
+
+        expect(response.body).toHaveProperty("error", "Route create failed");
+      } finally {
+        createSpy.mockRestore();
+      }
+    });
+
+    it("should return default error when createOrder returns no error", async () => {
+      const createSpy = jest
+        .spyOn(orderService, "createOrder")
+        .mockReturnValue([undefined, undefined]);
+
+      try {
+        const response = await request(app)
+          .post("/api/orders/order501")
+          .send({ name: "Name", status: "Pending" })
+          .expect(400);
+
+        expect(response.body).toHaveProperty(
+          "error",
+          "Error creating order",
+        );
+      } finally {
+        createSpy.mockRestore();
+      }
+    });
+
     it("should return 400 for invalid data", async () => {
       const response = await request(app)
         .post("/api/orders/order3")
@@ -190,6 +228,43 @@ describe("Orders API", () => {
         .expect(400);
 
       expect(response.body).toHaveProperty("error");
+    });
+
+    it("should return 400 when updateOrder fails", async () => {
+      const updateSpy = jest
+        .spyOn(orderService, "updateOrder")
+        .mockReturnValue([undefined, new Error("Route update failed")]);
+
+      try {
+        const response = await request(app)
+          .patch("/api/orders/order500")
+          .send({ name: "Name" })
+          .expect(400);
+
+        expect(response.body).toHaveProperty("error", "Route update failed");
+      } finally {
+        updateSpy.mockRestore();
+      }
+    });
+
+    it("should return default error when updateOrder returns no error", async () => {
+      const updateSpy = jest
+        .spyOn(orderService, "updateOrder")
+        .mockReturnValue([undefined, undefined]);
+
+      try {
+        const response = await request(app)
+          .patch("/api/orders/order501")
+          .send({ name: "Name" })
+          .expect(400);
+
+        expect(response.body).toHaveProperty(
+          "error",
+          "Error updating order",
+        );
+      } finally {
+        updateSpy.mockRestore();
+      }
     });
 
     it("should return 400 for non-existent order", async () => {

@@ -12,6 +12,7 @@ export const getOrders = (): Order[] => {
   const orders = db.prepare("SELECT * FROM orders").all() as Order[];
   return orders;
 };
+
 export const getOrderById = (id: string): Order | undefined => {
   const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
     | Order
@@ -32,6 +33,7 @@ export const createOrder = (
   }
   return [getOrderById(obj.id), undefined];
 };
+
 export const updateOrder = (
   obj: Order,
 ): [Order | undefined, Error | undefined] => {
@@ -54,6 +56,7 @@ export const updateOrder = (
     return [undefined, error];
   }
 };
+
 export const deleteOrder = (id: string): Order | undefined => {
   const order = getOrderById(id);
   if (!order) {

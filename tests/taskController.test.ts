@@ -111,7 +111,8 @@ describe("Order Module", () => {
       const [order, error] = createOrder(newOrder);
 
       expect(order).toBeUndefined();
-      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeDefined();
+      expect(error?.message).toContain("UNIQUE");
     });
   });
 
@@ -161,6 +162,52 @@ describe("Order Module", () => {
       expect(order).toHaveProperty("id", "order1");
       expect(order).toHaveProperty("name", "Original Name");
       expect(order).toHaveProperty("status", "Pending");
+    });
+
+    it("should preserve existing status when status is empty", () => {
+      // Insert test data
+      testDb
+        .prepare("INSERT INTO orders (id, name, status) VALUES (?, ?, ?)")
+        .run("order1", "Original Name", "Pending");
+
+      const updatedOrder = {
+        id: "order1",
+        name: "Updated Name",
+        status: "",
+      } as any;
+      const [order, error] = updateOrder(updatedOrder);
+
+      expect(error).toBeUndefined();
+      expect(order).toHaveProperty("id", "order1");
+      expect(order).toHaveProperty("name", "Updated Name");
+      expect(order).toHaveProperty("status", "Pending");
+    });
+
+    it("should return an error when the database update throws", () => {
+      // Insert test data
+      testDb
+        .prepare("INSERT INTO orders (id, name, status) VALUES (?, ?, ?)")
+        .run("order1", "Original Name", "Pending");
+
+      const prepareSpy = jest
+        .spyOn(testDb, "prepare")
+        .mockImplementation((): any => {
+          throw new Error("DB failure");
+        });
+
+      try {
+        const [order, error] = updateOrder({
+          id: "order1",
+          name: "Updated Name",
+          status: "Shipped",
+        });
+
+        expect(order).toBeUndefined();
+        expect(error).toBeInstanceOf(Error);
+        expect(error?.message).toBe("DB failure");
+      } finally {
+        prepareSpy.mockRestore();
+      }
     });
   });
 

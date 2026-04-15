@@ -70,6 +70,7 @@ orderRouter.get("/orders/:id", (req, res) => {
   const order = getOrderById(id);
   if (!order) {
     res.status(404).json({ message: "Order not found" });
+    return;
   }
   res.json(order);
 });
@@ -122,6 +123,7 @@ orderRouter.post("/orders/:id", async (req, res) => {
   const [order, error] = createOrder({ id, name, status });
   if (!order) {
     res.status(400).json({ error: error?.message || "Error creating order" });
+    return;
   }
   res.status(201).json(order);
 });
@@ -169,6 +171,7 @@ orderRouter.patch("/orders/:id", (req, res) => {
   const [order, error] = updateOrder({ id, name, status });
   if (!order) {
     res.status(400).json({ error: error?.message || "Error updating order" });
+    return;
   }
   res.json(order);
 });
