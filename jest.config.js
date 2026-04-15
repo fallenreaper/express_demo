@@ -16,5 +16,12 @@ export default {
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
-  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts"],
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    // I am not going to do coverage for index, db, or swagger definitions.
+    "!src/index.ts",
+    "!src/db.ts",
+    "!src/swagger.config.ts",
+    "!src/**/*.d.ts",
+  ],
 };
