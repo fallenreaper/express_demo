@@ -24,7 +24,7 @@ import {
   updateOrder,
   deleteOrder,
   type Order,
-} from "../src/order";
+} from "../src/orderService";
 
 // Clean up after each test
 afterEach(() => {

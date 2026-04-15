@@ -7,7 +7,7 @@ import {
   getOrders,
   Order,
   updateOrder,
-} from "../order";
+} from "../orderService";
 
 const orderRouter = Router();
 
