@@ -17,9 +17,9 @@ testDb.exec(`
 `);
 
 // Mock the db import before importing the router
-jest.mock("../db", () => testDb);
+jest.mock("../src/db.js", () => ({ __esModule: true, default: testDb }));
 
-import orderRouter from "./orders.routes";
+import orderRouter from "../src/routes/orders.routes";
 
 // Create a test app
 const app = express();

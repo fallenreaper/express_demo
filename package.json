@@ -10,6 +10,7 @@
     "build": "tsc",
     "start": "tsc && node dist/index.js",
     "test": "jest",
+    "coverage": "jest --coverage",
     "docker:build": "docker build -t express_demo .",
     "docker:run": "docker run -p 3000:3000 express_demo"
   },
