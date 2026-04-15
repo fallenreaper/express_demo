@@ -1,16 +1,15 @@
 import { Router } from "express";
-import db from "../db.js";
 import { z } from "zod";
+import {
+  createOrder,
+  deleteOrder,
+  getOrderById,
+  getOrders,
+  Order,
+  updateOrder,
+} from "../order";
 
 const orderRouter = Router();
-
-type Order = {
-  id: string;
-  name: string;
-  status: "Pending" | "Shipped";
-  created_at?: string;
-  updated_at?: string;
-};
 
 const OrderSchema = z.object({
   id: z.string(),
@@ -46,8 +45,7 @@ const validatePatchOrder = (obj: Partial<Order> & { id: string }) => {
  *         description: A JSON array of order objects.
  */
 orderRouter.get("/orders", (req, res) => {
-  const orders = db.prepare("SELECT * FROM orders").all() as Order[];
-  res.json(orders);
+  res.json(getOrders());
 });
 
 /**
@@ -69,9 +67,7 @@ orderRouter.get("/orders", (req, res) => {
  */
 orderRouter.get("/orders/:id", (req, res) => {
   const { id } = req.params;
-  const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
-    | Order
-    | undefined;
+  const order = getOrderById(id);
   if (!order) {
     res.status(404).json({ message: "Order not found" });
   }
@@ -123,20 +119,11 @@ orderRouter.post("/orders/:id", async (req, res) => {
     status = "Pending";
   }
 
-  try {
-    // Can error
-    db.prepare("INSERT INTO orders (id, name, status) VALUES (?, ?, ?)").run(
-      id,
-      name,
-      status,
-    );
-    const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
-      | Order
-      | undefined;
-    res.status(201).json(order);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
+  const [order, error] = createOrder({ id, name, status });
+  if (!order) {
+    res.status(400).json({ error: error?.message || "Error creating order" });
   }
+  res.status(201).json(order);
 });
 /**
  * @openapi
@@ -179,25 +166,11 @@ orderRouter.patch("/orders/:id", (req, res) => {
     return;
   }
   let { name, status } = req.body;
-  try {
-    let order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
-      | Order
-      | undefined;
-    if (!order) {
-      return res.status(400).json({ error: "Order not found" });
-    }
-    if (!name) name = order.name;
-    if (!status) status = order.status;
-    db.prepare(
-      "UPDATE orders SET name = ?, updated_at = CURRENT_TIMESTAMP, status = ? WHERE id = ?",
-    ).run(name, status, id);
-    order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
-      | Order
-      | undefined;
-    res.json(order);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
+  const [order, error] = updateOrder({ id, name, status });
+  if (!order) {
+    res.status(400).json({ error: error?.message || "Error updating order" });
   }
+  res.json(order);
 });
 /**
  * @openapi
@@ -218,13 +191,10 @@ orderRouter.patch("/orders/:id", (req, res) => {
  */
 orderRouter.delete("/orders/:id", (req, res) => {
   const { id } = req.params;
-  const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
-    | Order
-    | undefined;
+  const order = deleteOrder(id);
   if (!order) {
     return res.status(404).json({ error: "Order not found" });
   }
-  db.prepare("DELETE FROM orders WHERE id = ?").run(id);
   res.json(order);
 });
 
