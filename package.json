@@ -7,7 +7,6 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "build": "tsc",
     "start": "tsx src/index.ts",
     "test": "jest",
     "coverage": "jest --coverage",
