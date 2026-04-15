@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node dist/index.js",
+    "start": "tsx src/index.ts",
     "test": "jest",
     "coverage": "jest --coverage",
     "docker:build": "docker build -t express_demo .",
@@ -46,6 +46,7 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }
