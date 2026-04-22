@@ -60,6 +60,14 @@ File copying is taking longer than it should and seems to hang, even thought is 
 
 I added a task for a `npm ci` and `npm build` because i want to make sure that the packages are all correct and that the dist file is properly set up and ready for use. I do this to make sure that I am using the correct packages based on any OS constraints. Similarly, I want to make sure that dist is properly set up and built for consumption.
 
+### Rollback
+
+This is executed the same way deploy.yml is, `ansible-playbook -i inventory.yml rollback.yml` and it will essentially run a cleanup script which is essentially the reverse order of the deploy.yml file. We stop and remove the pm2 stuff, then delete the app folder and then uninstall postgres.
+
+### Test Script
+
+This was slightly augmented since there is no base route, so referencing sample-server:3000, it WILL fail. So i just grab the simplest route: /api/orders, so under the hood, the test script will call: `sample-server:3000/api/orders` and will return either an empty array OR a list of orders
+
 ### NOTE
 
 All servers defined need to have ssh creds set up since that is how things are processed. This is also why up in the [VM Setup](#vm-setup) I setup the server but passed an SSH public key for the vm to use, so my host can interact with the server through ssh.
