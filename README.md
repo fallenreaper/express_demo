@@ -132,3 +132,7 @@ I incorporated `zod` as a means to do schema validation for POST/PATCH events. I
 While running locally, I was not having issues, but there are hardware issues I needed to address. One is ownership of the container stuff, which you see me using chown in the Dockerfile.
 
 When running in k8s, I am using a mac, so it is built for ARM, but I was getting a lot of backoff because it was pulling ARM containers into a x86_64 system which seemed to keep getting errors and crash backoffs. I needed to add a nodeSelector which a platform definition.
+
+# Ansible
+
+For Information on Ansible use, reference the [README.md](./ansible/README.md) in the corresponding ansbile folder.
