@@ -1,3 +1,5 @@
 server:
   hosts:
     sample-server:
+      ansible_user: foo
+      ansible_become_password: bar

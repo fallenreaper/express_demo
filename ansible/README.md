@@ -38,6 +38,28 @@ If you did not already, install Ansible. `brew update && brew install ansible` w
 
 Your inventory.yml file is used to understand the scope of servers that will be handled through this script. For exmaple, in this case we are just going to have 1 item called `server`, but when dealing with configuration at scale you can define names to group various servers in different ways so that you can configure a baseline server definition.
 
+Since I was creating a sample user and password for becoming root, it was defined in my inventory file.
+
+### Executing the Commands
+
+To execute our deployment script, we would want to run the command:
+
+```bash
+ansible-playbook -i inventory.yml deploy.yml
+```
+
+This is a change off of the given assignment, as there was no defined inventory file, which is important to enable iteration ( for later ). I also updated who it applies to, do i updated hosts in [deploy.yml](deploy.yml) to reference `server` which is the defined keyword in the [inventory file](inventory.yml).
+
+It told me to reference the pem file, but I already confirmed and set the Hosts pub file by using `ssh-copy-id` aboce.
+
+### Mutating the deploy file
+
+The postgres tooling needed to be augmented with 2 seperate entries. One is the same user creation, but `priv` is no longer a valid command. To fix this, we just appended a new step to Grant Privledges for the POstgres user.
+
+File copying is taking longer than it should and seems to hang, even thought is did seem to copy it all. I ended up changing the query around so it isnt hangining. it is using find and then piping all the information into a copy command.
+
+I added a task for a `npm ci` and `npm build` because i want to make sure that the packages are all correct and that the dist file is properly set up and ready for use. I do this to make sure that I am using the correct packages based on any OS constraints. Similarly, I want to make sure that dist is properly set up and built for consumption.
+
 ### NOTE
 
 All servers defined need to have ssh creds set up since that is how things are processed. This is also why up in the [VM Setup](#vm-setup) I setup the server but passed an SSH public key for the vm to use, so my host can interact with the server through ssh.
