@@ -15,6 +15,21 @@
         path: /home/ubuntu/my-node-app
         state: absent
 
+    # PM2 Service is installed in the deploy, so I want to ensure it is removed.
+    - name: Uninstall pm2
+      npm:
+        name: pm2
+        state: absent
+        global: yes
+
+    # NodeJs and Npm are both installed in deploy, so I want to ensure they are removed.
+    - name: Uninstall Node Installs
+      apt:
+        name:
+          - nodejs
+        state: absent
+        purge: yes
+
     - name: Stop PostgreSQL service
       service:
         name: postgresql
