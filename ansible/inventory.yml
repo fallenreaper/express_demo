@@ -2,4 +2,5 @@ server:
   hosts:
     sample-server:
       ansible_user: foo
+      # become is used to create an association to root. This would be masked as a vault, secret, or environment variable in a real project.
       ansible_become_password: bar
